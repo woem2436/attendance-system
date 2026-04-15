@@ -1,48 +1,44 @@
 package com.example.attendancesystem.service.impl;
 
-import com.example.attendancesystem.dao.UserDao;
 import com.example.attendancesystem.entity.User;
+import com.example.attendancesystem.repository.UserRepository;
 import com.example.attendancesystem.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
-@Service // 必须加，否则 Controller 找不到它
+@Service
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    private UserDao userDao; // 注入上一步写的 UserDao
+    private UserRepository userRepository;
 
     @Override
     public String addUser(User user) {
-        int rows = userDao.insert(user);
-        return rows > 0 ? "用户添加成功" : "用户添加失败";
+        userRepository.save(user); // JPA 的 save 包含新增逻辑
+        return "用户添加成功";
     }
 
     @Override
     public User getUserById(Long id) {
-        // 这里可以加逻辑：如果找不到可以抛出友好异常
-        try {
-            return userDao.findById(id);
-        } catch (Exception e) {
-            throw new RuntimeException("未找到 ID 为 " + id + " 的用户");
-        }
+        // JPA 的 findById 返回 Optional，使用 orElse(null) 兼容旧逻辑
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<User> getAllTeachers() {
-        return userDao.findAllTeachers();
+        return userRepository.findByRole("TEACHER");
     }
 
     @Override
     public String updateUser(User user) {
-        int rows = userDao.update(user);
-        return rows > 0 ? "更新成功" : "更新失败";
+        userRepository.save(user); // save 方法有 ID 时执行 Update
+        return "更新成功";
     }
 
     @Override
     public String deleteUser(Long id) {
-        int rows = userDao.deleteById(id);
-        return rows > 0 ? "删除成功" : "删除失败";
+        userRepository.deleteById(id);
+        return "删除成功";
     }
 }

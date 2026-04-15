@@ -1,11 +1,11 @@
 package com.example.attendancesystem.service;
 
 import com.example.attendancesystem.entity.Attendance;
+import java.util.List;
 
 public interface AttendanceService {
-    // 任务：学生打卡（只需学号）
-    String punchCard(String studentId);
-
-    // 任务：更新详细考勤记录（JSON对象）
+    String punchCard(Long studentId); // 统一为 Long
     String updateAttendance(Attendance attendance);
+    // 【课后作业】：按学号查询考勤记录
+    List<Attendance> getRecordsByStudent(Long studentId);
 }

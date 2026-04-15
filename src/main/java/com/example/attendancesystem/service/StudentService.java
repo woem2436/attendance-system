@@ -1,10 +1,10 @@
 package com.example.attendancesystem.service;
 
 import com.example.attendancesystem.entity.Student;
+import java.util.List;
 
 public interface StudentService {
-    // 新增学生
     String createStudent(Student student);
-    // 根据ID获取学生
-    Student getStudentById(String studentId);
+    Student getStudentById(Long studentId); // 统一为 Long
+    List<Student> getStudentsByClass(String className); // 对应任务二要求
 }

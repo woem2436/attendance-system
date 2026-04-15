@@ -1,20 +1,32 @@
 package com.example.attendancesystem.entity;
 
-/**
- * 用户实体类 (对应数据库 user 表)
- */
-public class User {
-    private Long id;            // 主键ID
-    private String username;    // 用户名
-    private String password;    // 密码
-    private String realName;    // 真实姓名 (对应数据库 real_name)
-    private String role;        // 角色: TEACHER/ADMIN
+import jakarta.persistence.*;
 
-    // 1. 无参构造方法 (JdbcTemplate 必须要求有这个)
+@Entity
+@Table(name = "user")
+public class User {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true, length = 50)
+    private String username;
+
+    @Column(nullable = false, length = 100)
+    private String password;
+
+    @Column(name = "real_name", length = 50)
+    private String realName;
+
+    @Column(length = 20)
+    private String role;
+
+    // 1. 无参构造（JPA必须）
     public User() {
     }
 
-    // 2. 全参构造方法 (方便我们以后快速创建对象)
+    // 2. 全参构造
     public User(Long id, String username, String password, String realName, String role) {
         this.id = id;
         this.username = username;
@@ -23,7 +35,7 @@ public class User {
         this.role = role;
     }
 
-    // 3. Getter 和 Setter 方法 (必须齐全，否则数据导不进对象)
+    // 3. Getter 和 Setter
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -38,15 +50,4 @@ public class User {
 
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
-
-    // 可选：toString 方法，方便你在控制台打印看数据
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", realName='" + realName + '\'' +
-                ", role='" + role + '\'' +
-                '}';
-    }
 }
